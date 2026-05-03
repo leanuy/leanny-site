@@ -1,0 +1,117 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  date: Date;
+  summary: string;
+  location?: string;
+  coverImage?: string;
+  delay?: number;
+}
+
+const { slug, title, date, summary, location, coverImage, delay = 0 } = Astro.props;
+
+const formatted = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+});
+---
+
+<a
+  href={`/trips/${slug}`}
+  class="trip-card glass"
+  data-animate
+  data-delay={delay}
+>
+  <div class="cover">
+    {coverImage
+      ? <img src={coverImage} alt={title} loading="lazy" />
+      : <div class="cover-placeholder" />
+    }
+  </div>
+  <div class="content">
+    {location && <span class="location">{location}</span>}
+    <h2>{title}</h2>
+    <p class="summary">{summary}</p>
+    <span class="date">{formatted}</span>
+  </div>
+</a>
+
+<style>
+  .trip-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .trip-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+  }
+
+  .cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .trip-card:hover .cover img {
+    transform: scale(1.04);
+  }
+
+  .cover-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(129, 140, 248, 0.1), rgba(8, 8, 15, 0.6));
+  }
+
+  .content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .location {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #818cf8;
+    font-weight: 500;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #f1f5f9;
+    line-height: 1.3;
+  }
+
+  .summary {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #94a3b8;
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .date {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+    letter-spacing: 0.04em;
+  }
+</style>

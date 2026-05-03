@@ -1,0 +1,134 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import TripCard from '../../components/TripCard.astro';
+
+const trips = (await getCollection('trips')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<Base title="trips — leanny" description="Trip stories and photos">
+  <Nav />
+
+  <main>
+    <section class="hero">
+      <div class="hero-overlay" />
+      <div class="hero-content" data-animate>
+        <span class="eyebrow">travel</span>
+        <h1>trips</h1>
+        <p class="subtitle">{trips.length} {trips.length === 1 ? 'story' : 'stories'} so far</p>
+      </div>
+    </section>
+
+    <section class="trips-section">
+      <div class="container">
+        {trips.length === 0 ? (
+          <p class="empty">No trips yet — check back soon.</p>
+        ) : (
+          <div class="trips-grid">
+            {trips.map((trip, i) => (
+              <TripCard
+                slug={trip.id}
+                title={trip.data.title}
+                date={trip.data.date}
+                summary={trip.data.summary}
+                location={trip.data.location}
+                coverImage={trip.data.coverImage}
+                delay={i * 80}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  main {
+    min-height: 100vh;
+  }
+
+  .hero {
+    position: relative;
+    height: 38vh;
+    min-height: 240px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(129, 140, 248, 0.06) 0%, transparent 60%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 0 3rem 3rem;
+  }
+
+  .eyebrow {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #818cf8;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 300;
+    color: #f1f5f9;
+    margin: 0 0 0.25rem;
+    letter-spacing: 0.04em;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin: 0;
+    letter-spacing: 0.06em;
+  }
+
+  .trips-section {
+    padding: 4rem 0 8rem;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .trips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.75rem;
+  }
+
+  .empty {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    text-align: center;
+    padding: 4rem 0;
+  }
+
+  @media (max-width: 640px) {
+    .hero-content {
+      padding: 0 1.5rem 2.5rem;
+    }
+    .trips-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,251 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Carousel from '../components/Carousel.tsx';
+
+const slides = [
+  {
+    image: '/images/about/morro_negrito.jpg',
+    caption: 'When I was slim in Panama 2009',
+  },
+  {
+    image: '/images/about/surftrip_con_beto.jpg',
+    caption: 'Going to the east coast of Uruguay 2006?',
+  },
+  {
+    image: '/images/about/carpincho.jpg',
+    caption: 'Me',
+  },
+];
+---
+
+<Base title="about — leanny" description="About me">
+  <Nav />
+
+  <main>
+    <section class="hero">
+      <div class="hero-img" />
+      <div class="hero-overlay" />
+      <div class="hero-content" data-animate>
+        <span class="eyebrow">about</span>
+        <h1>hello, I'm Leanny.</h1>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="container">
+        <div class="about-grid">
+          <!-- Bio -->
+          <div class="bio-col" data-animate>
+            <div class="glass bio-card">
+              <p class="lead">
+                I come from Uruguay, the country of the Asado (BBQ) and the Mate (though I don't drink). <br><br>
+                I do have 'la garra charrua' meaning that even if life is giving me a headwind, I'll push harder to overcome anything that comes my way. <br><br>
+                If I don't know something, <strong>I learn it</strong>. <br> If it is hard, <strong>I keep trying</strong>.<br> If it hurts, <strong>I slow down</strong> (yes, don't get hurt please). <br><br>
+                At the end of the day, always remember that <br> <strong style='font-size: 18px'>"El camino es la recompensa" <br>(The journey is the reward)</strong>. 
+              </p>
+              <p>
+                When I'm not on the road (most of my time actually), I go for a surf, learn new things in tech, work on my van, go dancing, 
+                or just try to slow down after work. (I forgot about the gym XD)
+              </p>
+              <div class="tags">
+                <span class="tag">Surfing</span>
+                <span class="tag">do it yourself</span>
+                <span class="tag">builder</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carousel -->
+          <div class="carousel-col" data-animate data-delay="150">
+            <div class="glass carousel-wrap">
+              <Carousel slides={slides} client:load />
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats / quick facts -->
+        <div class="facts-row">
+          <div class="fact glass" data-animate>
+            <span class="fact-num">14</span>
+            <span class="fact-label">countries visited</span>
+          </div>
+          <div class="fact glass" data-animate data-delay="80">
+            <span class="fact-num">∞</span>
+            <span class="fact-label">coffees consumed</span>
+          </div>
+          <div class="fact glass" data-animate data-delay="160">
+            <span class="fact-num">1</span>
+            <span class="fact-label">blog, finally</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  main {
+    min-height: 100vh;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    height: 45vh;
+    min-height: 280px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    background-image: url('/images/about/about-hero.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.95;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(8, 8, 15, 0.3) 0%,
+      rgba(8, 8, 15, 0.85) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 0 3rem 3rem;
+  }
+
+  .eyebrow {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #818cf8;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    color: #f1f5f9;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  /* About section */
+  .about-section {
+    padding: 5rem 0 8rem;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+    margin-bottom: 3rem;
+  }
+
+  .bio-card {
+    padding: 2.5rem;
+    border-radius: 1rem;
+  }
+
+  .lead {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+    margin: 0 0 1.25rem;
+  }
+
+  .bio-card p {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    line-height: 1.8;
+    margin: 0 0 1rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(129, 140, 248, 0.25);
+    color: #818cf8;
+    border-radius: 9999px;
+    text-transform: lowercase;
+  }
+
+  /* Carousel */
+  .carousel-wrap {
+    border-radius: 1rem;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  /* Facts row */
+  .facts-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .fact {
+    padding: 2rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    text-align: center;
+  }
+
+  .fact-num {
+    font-size: 2rem;
+    font-weight: 300;
+    color: #a5b4fc;
+    letter-spacing: 0.05em;
+  }
+
+  .fact-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+
+  @media (max-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+    .facts-row {
+      grid-template-columns: 1fr;
+    }
+    .hero-content {
+      padding: 0 1.5rem 2.5rem;
+    }
+  }
+</style>

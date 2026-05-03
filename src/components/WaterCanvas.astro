@@ -1,0 +1,92 @@
+---
+---
+
+<canvas id="water-canvas"></canvas>
+
+<script>
+  const canvas = document.getElementById('water-canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Each layer: amplitude, wavelength, speed, y-offset, color
+  const layers = [
+    { amp: 80,  wave: 0.0038, speed: 0.00028, offset: 0.82, color: '#030c1a' },
+    { amp: 65,  wave: 0.0050, speed: 0.00038, offset: 0.72, color: '#040e1e' },
+    { amp: 52,  wave: 0.0062, speed: 0.00022, offset: 0.64, color: '#061426' },
+    { amp: 42,  wave: 0.0075, speed: 0.00045, offset: 0.56, color: '#07192f' },
+    { amp: 32,  wave: 0.0088, speed: 0.00032, offset: 0.49, color: '#091e38' },
+    { amp: 22,  wave: 0.0105, speed: 0.00055, offset: 0.42, color: '#0b2240' },
+  ];
+
+  let t = 0;
+
+  function drawLayer(
+    amp: number,
+    wave: number,
+    speed: number,
+    offset: number,
+    color: string,
+    time: number
+  ) {
+    const h = canvas.height;
+    const w = canvas.width;
+    const baseY = h * offset;
+
+    ctx.beginPath();
+    ctx.moveTo(0, h);
+
+    for (let x = 0; x <= w; x += 2) {
+      const y = baseY + Math.sin(x * wave + time * speed * 60) * amp
+                      + Math.sin(x * wave * 1.6 + time * speed * 40 + 1.2) * (amp * 0.4);
+      ctx.lineTo(x, y);
+    }
+
+    ctx.lineTo(w, h);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+
+  function draw() {
+    const w = canvas.width;
+    const h = canvas.height;
+
+    // Deep background — near black
+    ctx.fillStyle = '#010508';
+    ctx.fillRect(0, 0, w, h);
+
+    // Subtle cold-light shimmer near the surface
+    const shimmer = ctx.createLinearGradient(0, 0, 0, h * 0.45);
+    shimmer.addColorStop(0, 'rgba(30, 70, 130, 0.12)');
+    shimmer.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = shimmer;
+    ctx.fillRect(0, 0, w, h * 0.45);
+
+    // Draw layers back to front
+    for (const layer of layers) {
+      drawLayer(layer.amp, layer.wave, layer.speed, layer.offset, layer.color, t);
+    }
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
+
+<style>
+  #water-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+  }
+</style>
