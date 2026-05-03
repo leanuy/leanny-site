@@ -1,47 +1,36 @@
 # leanny.org — Personal Website
 
-## What this is
+Personal website built with Astro, designed to be self-hosted on a Raspberry Pi Zero at home via a Cloudflare Tunnel.
 
-A personal website hosted at `leanny.org`, served from a Raspberry Pi Zero at home via a Cloudflare Tunnel. CURRENTLY NOT RUNNINGs
+## Tech Stack
+- **Astro** — static site generator, Markdown-based content. Chosen because blog/trip posts are written in Markdown, builds to pure static HTML/CSS/JS, and has built-in content collections for the trips/blog section.
+- **Cloudflare Tunnel** — exposes the Pi to the internet without port forwarding, handles TLS
+- **Raspberry Pi Zero** — home server, runs alongside other self-hosted apps
+
+## Features
+- Trip/blog posts written in Markdown
+- Fully static — no login, no auth, no database
+- Self-hosted infrastructure on low-power hardware
 
 ## Infrastructure
-
-- The Pi Zero already runs another app (`home-lab.leanny.org`) via Cloudflare Tunnel
-- This site will be a second ingress on the same tunnel, pointing to a new server process on a different port (e.g. 4000)
-- Cloudflare handles TLS — local server runs plain HTTP
+- The Pi Zero also runs `home-lab.leanny.org` via the same Cloudflare Tunnel
+- This site runs as a second ingress on that tunnel, pointing to a different port (e.g. 4000)
 - Deployment: build locally → SCP `dist/` to Pi → serve as static files
 
-## Tech stack decision
-
-**Astro** — static site generator. Chosen because:
-- Blog/trip posts written in Markdown (one `.md` file per trip)
-- Builds to pure static HTML/CSS/JS, no runtime
-- Built-in content collections for the trips/blog section
-- Vite-based build (same mental model as the other project)
-
 ## Pages / Structure
-
 - `/` — main landing / hero page
 - `/about` — about section
 - `/trips` — lists all trip posts
 - `/trips/[slug]` — individual trip post with text and pictures
 
-## Content workflow
-
+## Content Workflow
 To add a new trip:
 1. Create `src/content/trips/my-trip.md` with frontmatter (title, date, cover image)
 2. Write markdown body, drop images in `public/`
 3. `pnpm build` → `dist/`
 4. SCP `dist/` to Pi Zero
 
-## No backend needed
-
-- No login, no auth, no database
-- Fully static — just files on disk
-- Images served as static assets
-
-## Cloudflare Tunnel addition needed
-
+## Cloudflare Tunnel Setup
 Add to `/etc/cloudflared/config.yml` on the Pi:
 ```yaml
 - hostname: leanny.org
