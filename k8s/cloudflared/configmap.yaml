@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+  namespace: leanny
+data:
+  config.yaml: |
+    tunnel: <YOUR_TUNNEL_ID>
+    credentials-file: /etc/cloudflared/creds/credentials.json
+    ingress:
+      - hostname: leanny.org
+        service: http://leanny-site.leanny.svc.cluster.local:80
+      - service: http_status:404

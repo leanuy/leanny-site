@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leanny-site
+  namespace: leanny
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leanny-site
+  template:
+    metadata:
+      labels:
+        app: leanny-site
+    spec:
+      containers:
+        - name: leanny-site
+          image: leanny-site:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
