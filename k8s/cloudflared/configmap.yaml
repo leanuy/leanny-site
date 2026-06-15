@@ -5,7 +5,7 @@ metadata:
   namespace: leanny
 data:
   config.yaml: |
-    tunnel: <YOUR_TUNNEL_ID>
+    tunnel: 24792a4f-e50e-4ff0-aa97-9d6ad9e4dc24
     credentials-file: /etc/cloudflared/creds/credentials.json
     ingress:
       - hostname: leanny.org
