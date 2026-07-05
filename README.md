@@ -1,12 +1,13 @@
 # leanny.org — Personal Website
 
-Personal website built with Astro, designed to be self-hosted on a Raspberry Pi Zero at home via a Cloudflare Tunnel. 
 Currently hosted in Cloudflare. https://leanny.org
+Personal website built with Astro, which used to be self-hosted on a Raspberry Pi Zero at home via a Cloudflare Tunnel. 
+
 
 ## Tech Stack
 - **Astro** — static site generator, Markdown-based content. Chosen because blog/trip posts are written in Markdown, builds to pure static HTML/CSS/JS, and has built-in content collections for the trips/blog section.
-- **Cloudflare Tunnel** — exposes the Pi to the internet without port forwarding, handles TLS
-- **Raspberry Pi Zero** — home server, runs alongside other self-hosted apps
+- **Cloudflare Tunnel** — exposes the Pi to the internet without port forwarding, handles TLS - NOT ANYMORE
+- **Raspberry Pi Zero** — home server, runs alongside other self-hosted apps - NOT ANYMORE
 
 ## Features
 - Trip/blog posts written in Markdown
