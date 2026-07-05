@@ -53,11 +53,18 @@ const formatted = trip.data.date.toLocaleDateString('en-US', {
             <h2>gallery</h2>
             <div class="gallery-grid">
               {trip.data.gallery.map((img) => (
-                <img src={img} alt="" loading="lazy" />
+                <button class="gallery-thumb" data-src={img} aria-label="Open image">
+                  <img src={img} alt="" loading="lazy" />
+                </button>
               ))}
             </div>
           </div>
         )}
+
+        <dialog id="lightbox" aria-label="Image lightbox">
+          <button id="lightbox-close" aria-label="Close">✕</button>
+          <img id="lightbox-img" src="" alt="" />
+        </dialog>
 
         <div class="back-link" data-animate>
           <a href="/trips">← back to trips</a>
@@ -174,11 +181,78 @@ const formatted = trip.data.date.toLocaleDateString('en-US', {
     gap: 1rem;
   }
 
-  .gallery-grid img {
+  .gallery-thumb {
+    all: unset;
+    cursor: zoom-in;
+    display: block;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .gallery-thumb img {
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
-    border-radius: 0.75rem;
+    display: block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .gallery-thumb:hover img {
+    transform: scale(1.03);
+    opacity: 0.85;
+  }
+
+  /* Lightbox */
+  #lightbox {
+    border: none;
+    background: transparent;
+    padding: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  #lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(6px);
+  }
+
+  #lightbox[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #lightbox-img {
+    max-width: 90vw;
+    max-height: 88vh;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 60px rgba(0, 0, 0, 0.7);
+  }
+
+  #lightbox-close {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e2e8f0;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    z-index: 10;
+  }
+
+  #lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.16);
   }
 
   .back-link {
@@ -206,3 +280,26 @@ const formatted = trip.data.date.toLocaleDateString('en-US', {
     }
   }
 </style>
+
+<script>
+  const lightbox = document.getElementById('lightbox') as HTMLDialogElement;
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const closeBtn = document.getElementById('lightbox-close');
+
+  document.querySelectorAll<HTMLButtonElement>('.gallery-thumb').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      lightboxImg.src = btn.dataset.src ?? '';
+      lightbox.showModal();
+    });
+  });
+
+  closeBtn?.addEventListener('click', () => lightbox.close());
+
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) lightbox.close();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') lightbox.close();
+  });
+</script>
