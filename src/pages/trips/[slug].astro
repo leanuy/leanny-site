@@ -63,7 +63,9 @@ const formatted = trip.data.date.toLocaleDateString('en-US', {
 
         <dialog id="lightbox" aria-label="Image lightbox">
           <button id="lightbox-close" aria-label="Close">✕</button>
+          <button id="lightbox-prev" aria-label="Previous image">&#8249;</button>
           <img id="lightbox-img" src="" alt="" />
+          <button id="lightbox-next" aria-label="Next image">&#8250;</button>
         </dialog>
 
         <div class="back-link" data-animate>
@@ -232,18 +234,16 @@ const formatted = trip.data.date.toLocaleDateString('en-US', {
     box-shadow: 0 8px 60px rgba(0, 0, 0, 0.7);
   }
 
-  #lightbox-close {
+  #lightbox-close,
+  #lightbox-prev,
+  #lightbox-next {
     position: fixed;
-    top: 1.25rem;
-    right: 1.5rem;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(8, 8, 15, 0.55);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     color: #e2e8f0;
-    width: 2.25rem;
-    height: 2.25rem;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 0.85rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -251,8 +251,35 @@ const formatted = trip.data.date.toLocaleDateString('en-US', {
     z-index: 10;
   }
 
-  #lightbox-close:hover {
-    background: rgba(255, 255, 255, 0.16);
+  #lightbox-close:hover,
+  #lightbox-prev:hover,
+  #lightbox-next:hover {
+    background: rgba(129, 140, 248, 0.25);
+  }
+
+  #lightbox-close {
+    top: 1.25rem;
+    right: 1.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.85rem;
+  }
+
+  #lightbox-prev,
+  #lightbox-next {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.5rem;
+  }
+
+  #lightbox-prev { left: 1.25rem; }
+  #lightbox-next { right: 1.25rem; }
+
+  #lightbox-prev[hidden],
+  #lightbox-next[hidden] {
+    display: none;
   }
 
   .back-link {
@@ -285,14 +312,32 @@ const formatted = trip.data.date.toLocaleDateString('en-US', {
   const lightbox = document.getElementById('lightbox') as HTMLDialogElement;
   const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
   const closeBtn = document.getElementById('lightbox-close');
+  const prevBtn = document.getElementById('lightbox-prev');
+  const nextBtn = document.getElementById('lightbox-next');
 
-  document.querySelectorAll<HTMLButtonElement>('.gallery-thumb').forEach((btn) => {
+  const thumbs = document.querySelectorAll<HTMLButtonElement>('.gallery-thumb');
+  const srcs = [...thumbs].map((b) => b.dataset.src ?? '');
+  let current = 0;
+
+  function show(index: number) {
+    current = (index + srcs.length) % srcs.length;
+    lightboxImg.src = srcs[current];
+  }
+
+  thumbs.forEach((btn, i) => {
     btn.addEventListener('click', () => {
-      lightboxImg.src = btn.dataset.src ?? '';
+      show(i);
       lightbox.showModal();
     });
   });
 
+  if (srcs.length <= 1) {
+    prevBtn?.setAttribute('hidden', '');
+    nextBtn?.setAttribute('hidden', '');
+  }
+
+  prevBtn?.addEventListener('click', () => show(current - 1));
+  nextBtn?.addEventListener('click', () => show(current + 1));
   closeBtn?.addEventListener('click', () => lightbox.close());
 
   lightbox.addEventListener('click', (e) => {
@@ -300,6 +345,8 @@ const formatted = trip.data.date.toLocaleDateString('en-US', {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') lightbox.close();
+    if (!lightbox.open) return;
+    if (e.key === 'ArrowLeft') show(current - 1);
+    if (e.key === 'ArrowRight') show(current + 1);
   });
 </script>
